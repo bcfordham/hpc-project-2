@@ -35,5 +35,7 @@ int main() {
 	generate_fish(fish);
 	print_fish(fish);
 	
+	free(fish);
+
 	return 0;
 }
