@@ -2,11 +2,11 @@ install: main.o timer.o
 	gcc -lm -o schooling main.o timer.o
 	rm main.o timer.o
 
-main.o: main.c timer.o timer.h
-	gcc -c main.c
+main.o: src/main.c timer.o src/timer.h
+	gcc -c src/main.c
 
-timer.o: timer.c timer.h
-	gcc -c timer.c
+timer.o: src/timer.c src/timer.h
+	gcc -c src/timer.c
 
 clean:
-	rm main.o timer.o
+	rm -f *.o
