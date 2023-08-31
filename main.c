@@ -4,7 +4,7 @@
 
 #define NUM_FISH 100
 #define SQUARE_SIZE 200
-#define INITIAL_WEIGHT 1
+#define INITIAL_WEIGHT 45
 #define NUM_STEPS 100
 
 struct fish {
@@ -23,12 +23,17 @@ void generate_fish(struct fish *fish) {
 	}
 }
 
-// Prints the fish values in a table
-void print_fish(struct fish *fish) {
-	printf("Fish #\tx\ty\tw\n");
+// Prints the values of one fish
+void print_fish(struct fish fish, int num) {
+	printf("%d\t%.2f\t%.2f\t%.5f\n", num, fish.x, fish.y, fish.w);
+}
 
+// Prints the values of all fish in a table
+void print_all_fish(struct fish *fish) {
+	printf("Fish #\tx\ty\tw\n");
+	
 	for (int i = 0; i < NUM_FISH; i++) {
-		printf("%d\t%.2f\t%.2f\t%.2f\n", i, fish[i].x, fish[i].y, fish[i].w);
+		print_fish(fish[i], i);
 	}
 }
 
@@ -36,7 +41,7 @@ void print_fish(struct fish *fish) {
 void eat(struct fish *fish, double max, int step) {
 	if (!step) {
 		for (int i = 0; i < NUM_FISH; i++)
-			fish[i].w += (rand() / (double)RAND_MAX) * 0.01;	// TODO: potentially tweak this random value that stands in for the objective function stuff
+			fish[i].w += (rand() / (double)RAND_MAX) * INITIAL_WEIGHT * 0.01;	// TODO: potentially tweak this random value that stands in for the objective function stuff
 
 		return;
 	}
@@ -52,10 +57,10 @@ void eat(struct fish *fish, double max, int step) {
 }
 
 // Calculates the difference in the objective function from last step to this step and stores the result in the fish
-double obj_diff(struct fish fish, double prev_x, double prev_y) {
-	fish.f = fabs(sqrt(pow(fish.x, 2) + pow(fish.y, 2)) - sqrt(pow(prev_x, 2) + pow(prev_y, 2)));
+double obj_diff(struct fish *fish, double prev_x, double prev_y) {
+	fish->f = fabs(sqrt(pow(fish->x, 2) + pow(fish->y, 2)) - sqrt(pow(prev_x, 2) + pow(prev_y, 2)));
 
-	return fish.f;
+	return fish->f;
 }
 
 // Updates the locations of fish if they are below 2w, also determines the maximum change in f across fish for use in eat()
@@ -72,7 +77,7 @@ double swim(struct fish *fish) {
 			fish[i].x += ((rand() / (double)RAND_MAX) - 0.5) * 0.2;
 			fish[i].y += ((rand() / (double)RAND_MAX) - 0.5) * 0.2;
 
-			if ((new = obj_diff(fish[i], prev_x, prev_y)) > max)
+			if ((new = obj_diff(&fish[i], prev_x, prev_y)) > max)
 				max = new;
 		}
 	}
@@ -94,7 +99,7 @@ int main() {
 
 	generate_fish(fish);
 	simulate(fish);
-	print_fish(fish);
+	print_all_fish(fish);
 
 	free(fish);
 
