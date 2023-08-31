@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "timer.h"
 
 #define NUM_FISH 100
 #define SQUARE_SIZE 200
@@ -25,7 +26,7 @@ void generate_fish(struct fish *fish) {
 
 // Prints the values of one fish
 void print_fish(struct fish fish, int num) {
-	printf("%d\t%.2f\t%.2f\t%.5f\n", num, fish.x, fish.y, fish.w);
+	printf("%d\t%.2f\t%.2f\t%.2f\n", num, fish.x, fish.y, fish.w);
 }
 
 // Prints the values of all fish in a table
@@ -86,6 +87,7 @@ double swim(struct fish *fish) {
 	return max;
 }
 
+// Calculates the barycentre of the fish
 double find_barycentre(struct fish *fish) {
 	double numerator = 0;
 	double denominator = 0;
@@ -100,6 +102,7 @@ double find_barycentre(struct fish *fish) {
 	return numerator / denominator;
 }
 
+// Simulates the eating, swimming and collective action of the fish
 double simulate(struct fish *fish) {
 	double max;
 	double barycentre;
@@ -115,13 +118,15 @@ double simulate(struct fish *fish) {
 
 int main() {
 	double barycentre;
+	struct timer *timer = malloc(sizeof(struct timer));
 	struct fish *fish = malloc(NUM_FISH * sizeof(struct fish));
 
-
+	start_timer(timer);
 	generate_fish(fish);
 	barycentre = simulate(fish);
+	end_timer(timer);
 	print_all_fish(fish, barycentre);
-
+	printf("Time taken: %.10f\n", timer->time_spent);
 	free(fish);
 
 	return 0;
