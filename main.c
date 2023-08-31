@@ -29,12 +29,13 @@ void print_fish(struct fish fish, int num) {
 }
 
 // Prints the values of all fish in a table
-void print_all_fish(struct fish *fish) {
+void print_all_fish(struct fish *fish, double barycentre) {
 	printf("Fish #\tx\ty\tw\n");
 	
 	for (int i = 0; i < NUM_FISH; i++) {
 		print_fish(fish[i], i);
 	}
+	printf("Barycentre: %.2f\n", barycentre);
 }
 
 // Calculates the new weight for the fish
@@ -85,21 +86,41 @@ double swim(struct fish *fish) {
 	return max;
 }
 
-void simulate(struct fish *fish) {
+double find_barycentre(struct fish *fish) {
+	double numerator = 0;
+	double denominator = 0;
+	double distance ;
+
+	for (int i = 0; i < NUM_FISH; i++) {
+		distance = sqrt(pow(fish[i].x, 2) + pow(fish[i].y, 2));
+		numerator +=  distance * fish[i].w;
+		denominator += distance;
+	}
+
+	return numerator / denominator;
+}
+
+double simulate(struct fish *fish) {
 	double max;
+	double barycentre;
 
 	for (int i = 0; i < NUM_STEPS; i++) {
 		max = swim(fish);
 		eat(fish, max, i);
+		barycentre = find_barycentre(fish);
 	}
+
+	return barycentre;
 }
 
 int main() {
+	double barycentre;
 	struct fish *fish = malloc(NUM_FISH * sizeof(struct fish));
 
+
 	generate_fish(fish);
-	simulate(fish);
-	print_all_fish(fish);
+	barycentre = simulate(fish);
+	print_all_fish(fish, barycentre);
 
 	free(fish);
 
