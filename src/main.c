@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <math.h>
 #include "timer.h"
+#include <omp.h>
 
-#define NUM_FISH 100
+
+#define NUM_FISH 1000000
 #define SQUARE_SIZE 200
 #define INITIAL_WEIGHT 45
 #define NUM_STEPS 100
@@ -103,23 +105,42 @@ double find_barycentre(struct fish *fish) {
 }
 
 // Simulates the eating, swimming and collective action of the fish
+// double simulate(struct fish *fish) {
+// 	double max;
+// 	double barycentre;
+
+// 	for (int i = 0; i < NUM_STEPS; i++) {
+// 		max = swim(fish);
+// 		eat(fish, max, i);
+// 		barycentre = find_barycentre(fish);
+// 	}
+
+// 	return barycentre;
+// }
+
 double simulate(struct fish *fish) {
-	double max;
-	double barycentre;
+    double max;
+    double barycentre;
 
-	for (int i = 0; i < NUM_STEPS; i++) {
-		max = swim(fish);
-		eat(fish, max, i);
-		barycentre = find_barycentre(fish);
-	}
+    #pragma omp parallel for private(max) shared(barycentre) num_threads(NUM_THREADS)
+    for (int i = 0; i < NUM_STEPS; i++) {
+        max = swim(fish);
+        eat(fish, max, i);
+        barycentre = find_barycentre(fish);
+    }
 
-	return barycentre;
+    return barycentre;
 }
+
 
 int main() {
 	double barycentre;
 	struct timer *timer = malloc(sizeof(struct timer));
 	struct fish *fish = malloc(NUM_FISH * sizeof(struct fish));
+
+
+	// Set the number of threads you want to use
+    int NUM_THREADS = 4; // adjust this for experimentation of report
 
 	start_timer(timer);
 	generate_fish(fish);
