@@ -142,12 +142,18 @@ int main() {
 	// Set the number of threads you want to use
     int NUM_THREADS = 4; // adjust this for experimentation of report
 
-	start_timer(timer);
+	// substitute for OpenMP
+	double start = omp_get_wtime();
+	// start_timer(timer);
 	generate_fish(fish);
 	barycentre = simulate(fish);
-	end_timer(timer);
+
+	double end = omp_get_wtime();
+	double time_taken= end-start;
+	// end_timer(timer);
 	print_all_fish(fish, barycentre);
-	printf("Time taken: %.10f\n", timer->time_spent);
+	printf("Time taken: %.10f\n", time_taken);
+
 	free(fish);
 
 	return 0;
