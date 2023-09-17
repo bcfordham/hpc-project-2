@@ -104,23 +104,25 @@ double find_barycentre(struct fish *fish) {
 	return numerator / denominator;
 }
 
-// Simulates the eating, swimming and collective action of the fish
-// double simulate(struct fish *fish) {
-// 	double max;
-// 	double barycentre;
+// Sequential
+double simulate_sequential(struct fish *fish) {
+	double max;
+	double barycentre;
 
-// 	for (int i = 0; i < NUM_STEPS; i++) {
-// 		max = swim(fish);
-// 		eat(fish, max, i);
-// 		barycentre = find_barycentre(fish);
-// 	}
+	for (int i = 0; i < NUM_STEPS; i++) {
+		max = swim(fish);
+		eat(fish, max, i);
+		barycentre = find_barycentre(fish);
+	}
 
-// 	return barycentre;
-// }
+	return barycentre;
+}
 
 
-// normal openMP parallisation
-double simulate1(struct fish *fish) {
+// Experiment 1
+// This experiment parallelizes the entire simulation loop using OpenMP parallel for.
+// Each fish's swim and eat operations are parallelized, and the barycentre is updated in each iteration.
+double simulate_parallel_1(struct fish *fish) {
     double max;
     double barycentre;
 
@@ -134,8 +136,11 @@ double simulate1(struct fish *fish) {
     return barycentre;
 }
 
-// schedulling
-void simulate2(struct fish *fish, int num_steps) {
+// Experiment 2
+// This experiment uses OpenMP tasks to parallelize the simulation.
+// Each step of the simulation is divided into tasks for fish's swim and eat operations.
+// The barycentre is updated after each step.
+void simulate_parallel_2(struct fish *fish, int num_steps) {
     #pragma omp parallel num_threads(NUM_THREADS)
     {
         #pragma omp single
@@ -157,8 +162,10 @@ void simulate2(struct fish *fish, int num_steps) {
     }
 }
 
-// task allocation
-void simulate3(struct fish *fish, int num_steps) {
+// Experiment 3
+// This experiment uses OpenMP master and taskloop to parallelize fish's swim and eat operations.
+// The barycentre is updated after each step.
+void simulate_parallel_3(struct fish *fish, int num_steps) {
     #pragma omp parallel num_threads(NUM_THREADS)
     {
         for (int step = 0; step < num_steps; step++) {
@@ -179,6 +186,52 @@ void simulate3(struct fish *fish, int num_steps) {
         }
     }
 }
+
+// Experiment 4
+// This experiment parallelizes fish's swim and eat operations using OpenMP for.
+// Each step of the simulation is divided into tasks for each fish, and the barycentre is updated after each step.
+void simulate_parallel_4(struct fish *fish, int num_steps) {
+    #pragma omp parallel num_threads(NUM_THREADS)
+    {
+        for (int step = 0; step < num_steps; step++) {
+            #pragma omp for
+            for (int i = 0; i < NUM_FISH; i++) {
+                double max = swim(&fish[i]);
+                eat(&fish[i], max, step);
+            }
+            
+            #pragma omp single
+            {
+                double barycentre = find_barycentre(fish);
+                // You may use barycentre in some way, e.g., print or store it
+            }
+        }
+    }
+}
+
+// Experiment 5
+// This experiment parallelizes fish's swim and eat operations using OpenMP parallel for.
+// Each step of the simulation is parallelized, and each fish's operations are parallelized within each step.
+// The barycentre is updated after each step.
+void simulate_parallel_5(struct fish *fish, int num_steps) {
+    #pragma omp parallel num_threads(NUM_THREADS)
+    {
+        for (int step = 0; step < num_steps; step++) {
+            #pragma omp parallel for
+            for (int i = 0; i < NUM_FISH; i++) {
+                double max = swim(&fish[i]);
+                eat(&fish[i], max, step);
+            }
+            
+            #pragma omp single
+            {
+                double barycentre = find_barycentre(fish);
+                // You may use barycentre in some way, e.g., print or store it
+            }
+        }
+    }
+}
+
 
 int main() {
 	double barycentre;
