@@ -118,7 +118,9 @@ double find_barycentre(struct fish *fish) {
 // 	return barycentre;
 // }
 
-double simulate(struct fish *fish) {
+
+// normal openMP parallisation
+double simulate1(struct fish *fish) {
     double max;
     double barycentre;
 
@@ -132,6 +134,52 @@ double simulate(struct fish *fish) {
     return barycentre;
 }
 
+// schedulling
+void simulate2(struct fish *fish, int num_steps) {
+    #pragma omp parallel num_threads(NUM_THREADS)
+    {
+        #pragma omp single
+        {
+            for (int step = 0; step < num_steps; step++) {
+                #pragma omp task
+                {
+                    double max = swim(fish);
+                    eat(fish, max, step);
+                }
+                #pragma omp task
+                {
+                    double barycentre = find_barycentre(fish);
+                    // You may use barycentre in some way, e.g., print or store it
+                }
+                #pragma omp taskwait
+            }
+        }
+    }
+}
+
+// task allocation
+void simulate3(struct fish *fish, int num_steps) {
+    #pragma omp parallel num_threads(NUM_THREADS)
+    {
+        for (int step = 0; step < num_steps; step++) {
+            #pragma omp master
+            {
+                #pragma omp taskloop
+                for (int i = 0; i < NUM_FISH; i++) {
+                    double max = swim(&fish[i]);
+                    eat(&fish[i], max, step);
+                }
+            }
+            #pragma omp task
+            {
+                double barycentre = find_barycentre(fish);
+                // You may use barycentre in some way, e.g., print or store it
+            }
+            #pragma omp taskwait
+        }
+    }
+}
+
 int main() {
 	double barycentre;
 	struct fish *fish = malloc(NUM_FISH * sizeof(struct fish));
@@ -139,7 +187,7 @@ int main() {
 	double start = omp_get_wtime();
 	
 	generate_fish(fish);
-	barycentre = simulate(fish);
+	barycentre = simulate1(fish);
 
 	double end = omp_get_wtime();
 	double time_taken = end - start;
