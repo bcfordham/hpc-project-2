@@ -4,6 +4,16 @@
 #include <omp.h>
 
 
+#include "fish"
+
+#include "simulate_sequential"
+
+#include "simulate_parallel_fish_operations"
+#include "simulate_parallel_step_tasks"
+#include "simulate_parallel_master_taskloop"
+#include "simulate_parallel_fish_tasks"
+#include "simulate_parallel_step_and_fish"
+
 #define NUM_FISH 1000000
 #define SQUARE_SIZE 200
 #define INITIAL_WEIGHT 45
