@@ -8,7 +8,7 @@
 
 export OMP_NUM_THREADS=32
 
-gcc -o all_simulation main.c simulate_parallel_step_tasks.c simulate_parallel_fish_operations.c simulate_parallel_fish_tasks.c simulate_parallel_master_taskloop.c simulate_parallel_step_and_fish.c simulate_sequential.c -fopenmp
+gcc -o all_simulation main.c fish.c simulate_parallel_step_tasks.c simulate_parallel_fish_operations.c simulate_parallel_fish_tasks.c simulate_parallel_master_taskloop.c simulate_parallel_step_and_fish.c simulate_sequential.c -fopenmp
 
 
 srun ./all_simulation
