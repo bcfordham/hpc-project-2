@@ -3,13 +3,25 @@
 #include <math.h>
 #include <omp.h>
 #include "fish.h"
-#include "simulation.h"
 
 #define NUM_FISH 1000000
 #define SQUARE_SIZE 200
 #define INITIAL_WEIGHT 45
 #define NUM_STEPS 100
 #define NUM_THREADS 4
+
+double simulate(struct fish *fish) {
+	double max;
+	double barycentre;
+
+	for (int i = 0; i < NUM_STEPS; i++) {
+		max = swim(fish);
+		eat(fish, max, i);
+		barycentre = find_barycentre(fish);
+	}
+
+	return barycentre;
+}
 
 int main() {
 	double barycentre;
@@ -19,8 +31,7 @@ int main() {
 	
 	generate_fish(fish);
 
-	// Declare which simulation you would like to use
-	// barycentre = simulate1(fish);
+	barycentre = simulate(fish);
 
 	double end = omp_get_wtime();
 	double time_taken = end - start;
