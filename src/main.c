@@ -6,7 +6,6 @@
 #include "utilities.h"
 
 #define NUM_STEPS 100
-#define NUM_THREADS 4
 
 double simulate(struct fish *fish) {
 	double max;
