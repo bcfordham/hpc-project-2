@@ -3,10 +3,8 @@
 #include <math.h>
 #include <omp.h>
 #include "fish.h"
+#include "utilities.h"
 
-#define NUM_FISH 1000000
-#define SQUARE_SIZE 200
-#define INITIAL_WEIGHT 45
 #define NUM_STEPS 100
 #define NUM_THREADS 4
 

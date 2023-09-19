@@ -1,3 +1,8 @@
+#define SQUARE_SIZE 200
+#define INITIAL_WEIGHT 45
+#define NUM_FISH 100000
+
+
 struct fish {
 	double x;
 	double y;
@@ -5,9 +10,6 @@ struct fish {
 	double f;
 };
 
-void generate_fish(struct fish *fish);
-void print_fish(struct fish fish, int num);
-void print_all_fish(struct fish *fish, double barycentre);
 void eat(struct fish *fish, double max, int step);
 double swim(struct fish *fish);
 double find_barycentre(struct fish *fish);

@@ -3,36 +3,7 @@
 #include <math.h>
 #include <omp.h>
 #include "fish.h"
-
-#define NUM_FISH 1000000
-#define SQUARE_SIZE 200
-#define INITIAL_WEIGHT 45
-#define NUM_STEPS 100
-#define NUM_THREADS 4
-
-// Initialises the fish position with random values and sets the weight to the intial weight
-void generate_fish(struct fish *fish) {
-	for (int i = 0; i < NUM_FISH; i++) {
-		fish[i].x = ((rand() / (double)RAND_MAX) - 0.5) * SQUARE_SIZE;	// TODO: tweak the generation to not include the boundaries, as is specified in the project spec
-		fish[i].y = ((rand() / (double)RAND_MAX) - 0.5) * SQUARE_SIZE;	// TODO: seed random value generation, decide whether it make it repeatable
-		fish[i].w = INITIAL_WEIGHT;
-	}
-}
-
-// Prints the values of one fish
-void print_fish(struct fish fish, int num) {
-	printf("%d\t%.2f\t%.2f\t%.2f\n", num, fish.x, fish.y, fish.w);
-}
-
-// Prints the values of all fish in a table
-void print_all_fish(struct fish *fish, double barycentre) {
-	printf("Fish #\tx\ty\tw\n");
-	
-	for (int i = 0; i < NUM_FISH; i++) {
-		print_fish(fish[i], i);
-	}
-	printf("Barycentre: %.2f\n", barycentre);
-}
+#include "utilities.h"
 
 // Calculates the new weight for the fish
 void eat(struct fish *fish, double max, int step) {
@@ -51,13 +22,6 @@ void eat(struct fish *fish, double max, int step) {
 				fish[i].w = 2 * INITIAL_WEIGHT;
 		}
 	}
-}
-
-// Calculates the difference in the objective function from last step to this step and stores the result in the fish
-double obj_diff(struct fish *fish, double prev_x, double prev_y) {
-	fish->f = fabs(sqrt(pow(fish->x, 2) + pow(fish->y, 2)) - sqrt(pow(prev_x, 2) + pow(prev_y, 2)));
-
-	return fish->f;
 }
 
 // Updates the locations of fish if they are below 2w, also determines the maximum change in f across fish for use in eat()
