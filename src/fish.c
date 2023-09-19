@@ -2,20 +2,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <omp.h>
-
+#include "fish.h"
 
 #define NUM_FISH 1000000
 #define SQUARE_SIZE 200
 #define INITIAL_WEIGHT 45
 #define NUM_STEPS 100
 #define NUM_THREADS 4
-
-struct fish {
-	double x;
-	double y;
-	double w;
-	double f;
-};
 
 // Initialises the fish position with random values and sets the weight to the intial weight
 void generate_fish(struct fish *fish) {
