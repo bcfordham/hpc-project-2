@@ -1,6 +1,6 @@
 // Parallel Step Tasks Simulation
 
-void simulate_parallel_step_tasks(struct fish *fish, int num_steps) {
+double simulate_parallel_step_tasks(struct fish *fish, int num_steps) {
     #pragma omp parallel num_threads(NUM_THREADS)
     {
         #pragma omp single
@@ -20,4 +20,5 @@ void simulate_parallel_step_tasks(struct fish *fish, int num_steps) {
             }
         }
     }
+    return barycentre;
 }

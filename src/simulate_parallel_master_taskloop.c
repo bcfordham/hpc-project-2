@@ -1,6 +1,6 @@
 // Parallel Master TaskLoop Simulation
 
-void simulate_parallel_master_taskloop(struct fish *fish, int num_steps) {
+double simulate_parallel_master_taskloop(struct fish *fish, int num_steps) {
     #pragma omp parallel num_threads(NUM_THREADS)
     {
         for (int step = 0; step < num_steps; step++) {
@@ -20,4 +20,5 @@ void simulate_parallel_master_taskloop(struct fish *fish, int num_steps) {
             #pragma omp taskwait
         }
     }
+    return barycentre;
 }
