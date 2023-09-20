@@ -27,6 +27,15 @@ sequential.o: src/sequential.c src/fish.h
 parallel_for.o: src/parallel_for.c src/fish.h
 	gcc -fopenmp -c src/parallel_for.c
 
+parallel_tasks.o: src/parallel_tasks.c src/fish.h
+	gcc -fopenmp -c src/parallel_tasks.c
+
+parallel_step_swim.o: src/parallel_step_swim.c src/fish.h
+gcc -fopenmp -c src/parallel_step_swim.c
+
+parallel_for_scheduling.o: src/parallel_for_scheduling.c src/fish.h
+gcc -fopenmp -c src/parallel_for_scheduling.c
+
 utilities.o: src/utilities.c src/utilities.h src/fish.h
 	gcc -fopenmp -c src/utilities.c
 
