@@ -8,7 +8,7 @@
 
 export OMP_NUM_THREADS=32
 
-make parallel_tasks
+make parallel_step_swim
 
 
 srun ./schooling
