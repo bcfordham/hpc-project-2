@@ -6,6 +6,18 @@ parallel_for: main.o parallel_for.o utilities.o
 	gcc -fopenmp -lm -g -o schooling main.o parallel_for.o utilities.o
 	rm -f *.o
 
+parallel_for_scheduling: main.o parallel_for_scheduling.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o parallel_for_scheduling.o utilities.o
+	rm -f *.o
+
+parallel_step_swim_: main.o parallel_step_swim.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o parallel_step_swim.o utilities.o
+	rm -f *.o
+
+parallel_tasks: main.o parallel_tasks.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o parallel_tasks.o utilities.o
+	rm -f *.o
+
 main.o: src/main.c src/fish.h src/utilities.h
 	gcc -fopenmp -c src/main.c
 

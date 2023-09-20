@@ -1,0 +1,19 @@
+cc1: fatal error: main.c: No such file or directory
+compilation terminated.
+cc1: fatal error: fish.c: No such file or directory
+compilation terminated.
+cc1: fatal error: simulate_parallel_step_tasks.c: No such file or directory
+compilation terminated.
+cc1: fatal error: simulate_parallel_fish_operations.c: No such file or directory
+compilation terminated.
+cc1: fatal error: simulate_parallel_fish_tasks.c: No such file or directory
+compilation terminated.
+cc1: fatal error: simulate_parallel_master_taskloop.c: No such file or directory
+compilation terminated.
+cc1: fatal error: simulate_parallel_step_and_fish.c: No such file or directory
+compilation terminated.
+cc1: fatal error: simulate_sequential.c: No such file or directory
+compilation terminated.
+slurmstepd: error: execve(): /home/nong/hpc-project/./all_simulation: No such file or directory
+srun: error: nid002604: task 0: Exited with exit code 2
+srun: launch/slurm: _step_signal: Terminating StepId=4577237.0
