@@ -18,6 +18,18 @@ parallel_tasks: main.o parallel_tasks.o utilities.o
 	gcc -fopenmp -lm -g -o schooling main.o parallel_tasks.o utilities.o
 	rm -f *.o
 
+swim_only: main.o swim_only.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o swim_only.o utilities.o
+	rm -f *.o
+
+eat_only: main.o eat_only.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o eat_only.o utilities.o
+	rm -f *.o
+
+barycentre_only: main.o barycentre_only.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o barycentre_only.o utilities.o
+	rm -f *.o
+
 main.o: src/main.c src/fish.h src/utilities.h
 	gcc -fopenmp -c src/main.c
 
@@ -35,6 +47,15 @@ parallel_step_swim.o: src/parallel_step_swim.c src/fish.h
 
 parallel_for_scheduling.o: src/parallel_for_scheduling.c src/fish.h
 	gcc -fopenmp -c src/parallel_for_scheduling.c
+
+swim_only.o: src/swim_only.c src/fish.h
+	gcc -fopenmp -c src/swim_only.c
+
+eat_only.o: src/eat_only.c src/fish.h
+	gcc -fopenmp -c src/eat_only.c
+
+barycentre_only.o: src/barycentre_only.c src/fish.h
+	gcc -fopenmp -c src/barycentre_only.c
 
 utilities.o: src/utilities.c src/utilities.h src/fish.h
 	gcc -fopenmp -c src/utilities.c
