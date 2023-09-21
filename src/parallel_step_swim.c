@@ -6,7 +6,7 @@
 #include "utilities.h"
 
 // Helper function for eat step
-void eat_step(struct fish *fish, int start, int end) {
+void eat_step(struct fish *fish, double max, int start, int end) {
     for (int i = start; i < end; i++) {
         if (fish[i].w < 2 * INITIAL_WEIGHT) {
             fish[i].w += fish[i].f / max;
@@ -50,13 +50,14 @@ void eat(struct fish *fish, double max, int step) {
     } else {
         #pragma omp parallel
         {
+            double max_local = max; // Initialize max_local with the passed max value.
             #pragma omp single
             {
                 for (int i = 0; i < NUM_FISH; i++) {
                     #pragma omp task
                     {
                         if (fish[i].w < 2 * INITIAL_WEIGHT) {
-                            fish[i].w += fish[i].f / max;
+                            fish[i].w += fish[i].f / max_local;
                             if (fish[i].w > 2 * INITIAL_WEIGHT) {
                                 fish[i].w = 2 * INITIAL_WEIGHT;
                             }
