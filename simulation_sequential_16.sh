@@ -4,11 +4,11 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=4
 #SBATCH --cpus-per-task=4
-#SBATCH --time=00:01:00
+#SBATCH --time=01:00:00
 
-export OMP_NUM_THREADS=32
+export OMP_NUM_THREADS=16
 
-make parallel_step_swim
+make sequential
 
 
 srun ./schooling

@@ -5,7 +5,7 @@
 #include "fish.h"
 #include "utilities.h"
 
-#define NUM_STEPS 100
+#define NUM_STEPS 10000
 
 double simulate(struct fish *fish) {
 	double max;
