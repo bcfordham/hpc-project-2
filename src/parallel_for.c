@@ -7,21 +7,22 @@
 
 // Calculates the new weight for the fish
 void eat(struct fish *fish, double max, int step) {
-	if (!step) {
-		#pragma omp parallel for
-		for (int i = 0; i < NUM_FISH; i++)
-			fish[i].w += (rand() / (double)RAND_MAX) * INITIAL_WEIGHT * 0.01;	// TODO: potentially tweak this random value that stands in for the objective function stuff
+	#pragma omp parallel
+	{
+		if (!step) {
+			#pragma omp for
+			for (int i = 0; i < NUM_FISH; i++)
+				fish[i].w += (rand() / (double)RAND_MAX) * INITIAL_WEIGHT * 0.01;	// TODO: potentially tweak this random value that stands in for the objective function stuff
+		} else {
+			#pragma omp for
+			for (int i = 0; i < NUM_FISH; i++) {
+				if (fish[i].w < 2 * INITIAL_WEIGHT) {
+					fish[i].w += fish[i].f / max;
 
-		return;
-	}
-
-	#pragma omp parallel for
-	for (int i = 0; i < NUM_FISH; i++) {
-		if (fish[i].w < 2 * INITIAL_WEIGHT) {
-			fish[i].w += fish[i].f / max;
-
-			if(fish[i].w > 2 * INITIAL_WEIGHT)
-				fish[i].w = 2 * INITIAL_WEIGHT;
+					if(fish[i].w > 2 * INITIAL_WEIGHT)
+						fish[i].w = 2 * INITIAL_WEIGHT;
+				}
+			}
 		}
 	}
 }

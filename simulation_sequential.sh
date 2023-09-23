@@ -6,9 +6,6 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
 
-export OMP_NUM_THREADS=32
-
 make sequential
-
 
 srun ./schooling

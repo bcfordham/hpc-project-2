@@ -5,7 +5,7 @@
 #include "fish.h"
 #include "utilities.h"
 
-#define NUM_STEPS 10000
+#define NUM_STEPS 300000
 
 double simulate(struct fish *fish) {
 	double max;
@@ -35,7 +35,6 @@ int main() {
 	
 	print_all_fish(fish, barycentre);
 	printf("Time taken: %.10f\n", time_taken);
-
 	free(fish);
 
 	return 0;

@@ -6,9 +6,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
 
-export OMP_NUM_THREADS=1
+make barycentre_only
 
-make sequential
-
+export OMP_NUM_THREADS=2
 
 srun ./schooling
