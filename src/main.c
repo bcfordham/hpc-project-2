@@ -5,7 +5,7 @@
 #include "fish.h"
 #include "utilities.h"
 
-#define NUM_STEPS 300000
+#define NUM_STEPS 10000
 
 double simulate(struct fish *fish) {
 	double max;
@@ -33,7 +33,9 @@ int main() {
 	double end = omp_get_wtime();
 	double time_taken = end - start;
 	
-	print_all_fish(fish, barycentre);
+	//print_all_fish(fish, barycentre);
+	printf("num of steps: %d\n", NUM_STEPS);
+	printf("num of fish: %d\n", NUM_FISH);
 	printf("Time taken: %.10f\n", time_taken);
 	free(fish);
 
