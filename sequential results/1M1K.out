@@ -1,0 +1,8 @@
+gcc -fopenmp -c src/main.c
+gcc -c src/sequential.c
+gcc -fopenmp -c src/utilities.c
+gcc -fopenmp -lm -g -o schooling main.o sequential.o utilities.o
+rm -f *.o
+num of steps: 1000
+num of fish: 1000000
+Time taken: 54.3297705131

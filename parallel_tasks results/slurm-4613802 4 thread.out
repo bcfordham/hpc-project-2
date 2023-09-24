@@ -1,0 +1,8 @@
+gcc -fopenmp -c src/main.c
+gcc -fopenmp -c src/parallel_tasks.c
+gcc -fopenmp -c src/utilities.c
+gcc -fopenmp -lm -g -o schooling main.o parallel_tasks.o utilities.o
+rm -f *.o
+slurmstepd: error: *** STEP 4613802.0 ON nid002604 CANCELLED AT 2023-09-24T16:59:19 DUE TO TIME LIMIT ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 4613802 ON nid002604 CANCELLED AT 2023-09-24T16:59:19 DUE TO TIME LIMIT ***
