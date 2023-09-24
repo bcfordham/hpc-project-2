@@ -6,8 +6,20 @@ parallel_for: main.o parallel_for.o utilities.o
 	gcc -fopenmp -lm -g -o schooling main.o parallel_for.o utilities.o
 	rm -f *.o
 
-parallel_for_scheduling: main.o parallel_for_scheduling.o utilities.o
-	gcc -fopenmp -lm -g -o schooling main.o parallel_for_scheduling.o utilities.o
+parallel_for_scheduling_static: main.o parallel_for_scheduling_static.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o parallel_for_scheduling_static.o utilities.o
+	rm -f *.o
+
+parallel_for_scheduling_dynamic: main.o parallel_for_scheduling_dynamic.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o parallel_for_scheduling_dynamic.o utilities.o
+	rm -f *.o
+
+parallel_for_scheduling_guided: main.o parallel_for_scheduling_guided.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o parallel_for_scheduling_guided.o utilities.o
+	rm -f *.o
+
+parallel_for_scheduling_runtime: main.o parallel_for_scheduling_runtime.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o parallel_for_scheduling_runtime.o utilities.o
 	rm -f *.o
 
 parallel_step_swim_: main.o parallel_step_swim.o utilities.o
@@ -49,8 +61,17 @@ parallel_tasks.o: src/parallel_tasks.c src/fish.h
 parallel_step_swim.o: src/parallel_step_swim.c src/fish.h
 	gcc -fopenmp -c src/parallel_step_swim.c
 
-parallel_for_scheduling.o: src/parallel_for_scheduling.c src/fish.h
-	gcc -fopenmp -c src/parallel_for_scheduling.c
+parallel_for_scheduling_static.o: src/parallel_for_scheduling_static.c src/fish.h
+	gcc -fopenmp -c src/parallel_for_scheduling_static.c
+
+parallel_for_scheduling_dynamic.o: src/parallel_for_scheduling_dynamic.c src/fish.h
+	gcc -fopenmp -c src/parallel_for_scheduling_dynamic.c
+
+parallel_for_scheduling_guided.o: src/parallel_for_scheduling_guided.c src/fish.h
+	gcc -fopenmp -c src/parallel_for_scheduling_guided.c
+
+parallel_for_scheduling_runtime.o: src/parallel_for_scheduling_runtime.c src/fish.h
+	gcc -fopenmp -c src/parallel_for_scheduling_runtime.c
 
 swim_only.o: src/swim_only.c src/fish.h
 	gcc -fopenmp -c src/swim_only.c
