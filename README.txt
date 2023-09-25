@@ -1,5 +1,9 @@
 Repository for the High Performance Computing project
 
+Developed by: 
+Blake Fordham (22708346)
+Nicodemus Ong (22607943)
+
 Compilation:
 Compile with make and the rule corresponding to whichever implementation you'd 
 like to use.
