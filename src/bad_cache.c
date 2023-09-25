@@ -13,7 +13,10 @@ void eat(struct fish *fish, double max, int step) {
 		omp_set_num_threads(8);
 		#pragma omp parallel
 		{
-			for (int i = omp_get_thread_num(); i < NUM_FISH; i += NUM_THREADS)
+			for (int i = omp_get_thread_num() 
+				* (NUM_FISH / omp_get_num_threads()); 
+				i < omp_get_thread_num() * (NUM_FISH / omp_get_num_threads()) 
+				+ (NUM_FISH / omp_get_num_threads()) && i < NUM_FISH; i++)
 				fish[i].w += (rand() / (double)RAND_MAX) * INITIAL_WEIGHT * 0.01;	// TODO: potentially tweak this random value that stands in for the objective function stuff
 		}
 
@@ -23,7 +26,11 @@ void eat(struct fish *fish, double max, int step) {
 	omp_set_num_threads(8);
 	#pragma omp parallel
 	{
-		for (int i = omp_get_thread_num(); i < NUM_FISH; i += NUM_THREADS) {
+		for (int i = omp_get_thread_num() 
+			* (NUM_FISH / omp_get_num_threads()); 
+			i < omp_get_thread_num() * (NUM_FISH / omp_get_num_threads()) 
+			+ (NUM_FISH / omp_get_num_threads()) && i < NUM_FISH; i++) 
+		{
 			if (fish[i].w < 2 * INITIAL_WEIGHT) {
 				fish[i].w += fish[i].f / max;
 
@@ -44,7 +51,11 @@ double swim(struct fish *fish) {
 	omp_set_num_threads(8);
 	#pragma omp parallel reduction(max:max) private(prev_x, prev_y, new)
 	{
-		for (int i = omp_get_thread_num(); i < NUM_FISH; i += NUM_THREADS) {
+		for (int i = omp_get_thread_num() 
+			* (NUM_FISH / omp_get_num_threads()); 
+			i < omp_get_thread_num() * (NUM_FISH / omp_get_num_threads()) 
+			+ (NUM_FISH / omp_get_num_threads()) && i < NUM_FISH; i++) 
+		{
 			if (fish[i].w < 2 * INITIAL_WEIGHT) {
 				prev_x = fish[i].x;
 				prev_y = fish[i].y;
@@ -69,11 +80,15 @@ double find_barycentre(struct fish *fish) {
 	omp_set_num_threads(8);
 	#pragma omp parallel reduction(+:numerator) reduction(+:denominator) private(distance)
 	{
-		for (int i = omp_get_thread_num(); i < NUM_FISH; i += NUM_THREADS) {
+		for (int i = omp_get_thread_num() 
+			* (NUM_FISH / omp_get_num_threads()); 
+			i < omp_get_thread_num() * (NUM_FISH / omp_get_num_threads()) 
+			+ (NUM_FISH / omp_get_num_threads()) && i < NUM_FISH; i++) 
+		{
 			distance = sqrt(pow(fish[i].x, 2) + pow(fish[i].y, 2));
 			numerator +=  distance * fish[i].w;
 			denominator += distance;
-		}
+		} 
 	}
 
 	return numerator / denominator;

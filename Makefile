@@ -46,6 +46,10 @@ good_cache: main.o good_cache.o utilities.o
 	gcc -fopenmp -lm -g -o schooling main.o good_cache.o utilities.o
 	rm -f *.o
 
+bad_cache: main.o bad_cache.o utilities.o
+	gcc -fopenmp -lm -g -o schooling main.o bad_cache.o utilities.o
+	rm -f *.o
+
 main.o: src/main.c src/fish.h src/utilities.h
 	gcc -fopenmp -c src/main.c
 
@@ -84,6 +88,9 @@ barycentre_only.o: src/barycentre_only.c src/fish.h
 
 good_cache.o: src/good_cache.c src/fish.h
 	gcc -fopenmp -c src/good_cache.c
+
+bad_cache.o: src/bad_cache.c src/fish.h
+	gcc -fopenmp -c src/bad_cache.c
 
 utilities.o: src/utilities.c src/utilities.h src/fish.h
 	gcc -fopenmp -c src/utilities.c
