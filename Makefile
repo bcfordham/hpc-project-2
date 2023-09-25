@@ -22,7 +22,7 @@ parallel_for_scheduling_runtime: main.o parallel_for_scheduling_runtime.o utilit
 	gcc -fopenmp -lm -g -o schooling main.o parallel_for_scheduling_runtime.o utilities.o
 	rm -f *.o
 
-parallel_step_swim_: main.o parallel_step_swim.o utilities.o
+parallel_step_swim: main.o parallel_step_swim.o utilities.o
 	gcc -fopenmp -lm -g -o schooling main.o parallel_step_swim.o utilities.o
 	rm -f *.o
 
