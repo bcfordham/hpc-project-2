@@ -1,0 +1,15 @@
+num of steps: 100
+num of fish: 8000000
+Time taken: 118.9442501620
+
+ Performance counter stats for 'srun ./good_cache':
+
+         1,640,514      cache-references:u                                          
+           268,057      cache-misses:u            #   16.340 % of all cache refs    
+
+     119.198356500 seconds time elapsed
+
+       0.022912000 seconds user
+       0.000000000 seconds sys
+
+
