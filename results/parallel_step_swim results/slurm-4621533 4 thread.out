@@ -1,0 +1,8 @@
+gcc -fopenmp -c src/main.c
+gcc -fopenmp -c src/parallel_step_swim.c
+gcc -fopenmp -c src/utilities.c
+gcc -fopenmp -lm -g -o schooling main.o parallel_step_swim.o utilities.o
+rm -f *.o
+num of steps: 10000
+num of fish: 1000000
+Time taken: 697.7363463328

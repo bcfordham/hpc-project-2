@@ -8,6 +8,6 @@
 
 make parallel_step_swim
 
-export OMP_NUM_THREADS=32
+export OMP_NUM_THREADS=2
 
 srun ./schooling
