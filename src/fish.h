@@ -1,6 +1,6 @@
 #define SQUARE_SIZE 200
 #define INITIAL_WEIGHT 45
-#define NUM_FISH 1000000
+#define NUM_FISH 100
 
 
 struct fish {
