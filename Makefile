@@ -51,7 +51,7 @@ bad_cache: main.o bad_cache.o utilities.o
 	rm -f *.o
 
 first_deliverable: first_deliverable.o utilities.o
-	gcc -fopenmp -lm -o schooling first_deliverable.o utilities.o
+	mpicc -fopenmp -g -lm -o schooling first_deliverable.o utilities.o
 	rm -f *.o
 
 main.o: src/main.c src/fish.h src/utilities.h
@@ -100,7 +100,7 @@ utilities.o: src/utilities.c src/utilities.h src/fish.h
 	gcc -fopenmp -c src/utilities.c
 
 first_deliverable.o: src/first_deliverable.c src/fish.h src/utilities.h
-	gcc -fopenmp -c src/first_deliverable.c
+	mpicc -fopenmp -g -c src/first_deliverable.c
 
 clean:
 	rm -f *.o
