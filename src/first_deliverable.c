@@ -3,12 +3,14 @@
 #include <math.h>
 #include <omp.h>
 #include <mpi.h>
-#include "fish.h"
-#include "utilities.h"
+#include "fish_mpi.h"
+#include "utilities_mpi.h"
+
+#define NUM_PROCESSES 4
+#define NUM_STEPS 100
 
 // NUM_FISH needs to be divisible by NUM_PROCESSES to send the correct number of 
 // fish to worker processes
-#define NUM_PROCESSES 4
 
 // Function only executed by the master process
 void pre_scatter(struct fish *fish)
@@ -51,29 +53,44 @@ int main(int argc, char *argv[])
 	const int num_bytes = (NUM_FISH / NUM_PROCESSES) * sizeof(struct fish);
 
 	// MPI code initialisation
-	MPI_Init(&argc, &argv);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-	if (rank == 0) {
-		all_fish = malloc(NUM_FISH * sizeof(struct fish));
-		pre_scatter(all_fish);
-	}
+    if (rank == 0) {
+        all_fish = malloc(NUM_FISH * sizeof(struct fish));
+        generate_fish(all_fish);
+    }
 	
-	worker_fish = malloc(num_bytes);
+    worker_fish = malloc(num_bytes);
+	
+	MPI_Scatter(all_fish, num_bytes, MPI_BYTE, worker_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
+    double local_numerator, local_denominator, local_max;
+	double global_numerator, global_denominator, global_max;
+    for (int i = 0; i < NUM_STEPS; i++) {
+		local_max = parallel_swim(worker_fish);
+		
+		MPI_Allreduce(&local_max, &global_max, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+		MPI_Bcast(&global_max, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-	MPI_Scatter(all_fish, num_bytes, MPI_BYTE, worker_fish, num_bytes, 
-			 MPI_BYTE, 0, MPI_COMM_WORLD);
+		parallel_eat(worker_fish, max, i);
+		barycentre = parallel_find_barycentre(worker_fish, &local_numerator, &local_denominator);
 
-	MPI_Gather(worker_fish, num_bytes, MPI_BYTE, all_fish, 
-			num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
+		MPI_Allreduce(&local_numerator, &global_numerator, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    	MPI_Allreduce(&local_denominator, &global_denominator, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        // global deno / global numer
 
-	if (rank == 0)
-		post_scatter(all_fish);
+		barycentre = &global_numerator / &global_numerator;
+	}
 
-	free(worker_fish);
+	MPI_Gather(worker_fish, num_bytes, MPI_BYTE, all_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
 
-	MPI_Finalize();
+    if (rank == 0) {
+        // Only the master process had allocated memory for all_fish
+        free(all_fish);
+    }
+    free(worker_fish);
+    MPI_Finalize();
 
 	end = omp_get_wtime();
 	time_taken = end - start;

@@ -1,3 +1,7 @@
+parallel_for_mpi: first_deliverable.o parallel_for_mpi.o utilities.o
+	mpicc -fopenmp -g -lm -o schooling first_deliverable.o utilities_mpi.o
+	rm -f *.o
+
 sequential: main.o sequential.o utilities.o
 	gcc -fopenmp -lm -g -o schooling main.o sequential.o utilities.o
 	rm -f *.o
@@ -50,12 +54,15 @@ bad_cache: main.o bad_cache.o utilities.o
 	gcc -fopenmp -lm -g -o schooling main.o bad_cache.o utilities.o
 	rm -f *.o
 
-first_deliverable: first_deliverable.o utilities.o
-	mpicc -fopenmp -g -lm -o schooling first_deliverable.o utilities.o
+first_deliverable: first_deliverable.o utilities_mpi.o
+	mpicc -fopenmp -g -lm -o schooling first_deliverable.o utilities_mpi.o
 	rm -f *.o
 
 main.o: src/main.c src/fish.h src/utilities.h
 	gcc -fopenmp -c src/main.c
+
+parallel_for_mpi.o: src/parallel_for_mpi src/fish_mpi.h
+	gcc -c src/parallel_for_mpi.c
 
 sequential.o: src/sequential.c src/fish.h
 	gcc -c src/sequential.c
@@ -99,7 +106,10 @@ bad_cache.o: src/bad_cache.c src/fish.h
 utilities.o: src/utilities.c src/utilities.h src/fish.h
 	gcc -fopenmp -c src/utilities.c
 
-first_deliverable.o: src/first_deliverable.c src/fish.h src/utilities.h
+utilities_mpi.o: src/utilities_mpi.c src/utilities_mpi.h src/fish_mpi.h
+	gcc -fopenmp -c src/utilities_mpi.c
+
+first_deliverable.o: src/first_deliverable.c src/fish_mpi.h src/utilities_mpi.h
 	mpicc -fopenmp -g -c src/first_deliverable.c
 
 clean:
