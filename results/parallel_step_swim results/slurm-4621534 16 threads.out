@@ -1,8 +1,0 @@
-gcc -fopenmp -c src/main.c
-gcc -fopenmp -c src/parallel_step_swim.c
-gcc -fopenmp -c src/utilities.c
-gcc -fopenmp -lm -g -o schooling main.o parallel_step_swim.o utilities.o
-rm -f *.o
-slurmstepd: error: *** STEP 4621534.0 ON nid002604 CANCELLED AT 2023-09-25T21:54:49 DUE TO TIME LIMIT ***
-slurmstepd: error: *** JOB 4621534 ON nid002604 CANCELLED AT 2023-09-25T21:54:49 DUE TO TIME LIMIT ***
-srun: Job step aborted: Waiting up to 32 seconds for job step to finish.

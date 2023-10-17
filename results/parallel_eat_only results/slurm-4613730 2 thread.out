@@ -1,8 +1,0 @@
-gcc -fopenmp -c src/main.c
-gcc -fopenmp -c src/eat_only.c
-gcc -fopenmp -c src/utilities.c
-gcc -fopenmp -lm -g -o schooling main.o eat_only.o utilities.o
-rm -f *.o
-num of steps: 10000
-num of fish: 1000000
-Time taken: 425.0957525740
