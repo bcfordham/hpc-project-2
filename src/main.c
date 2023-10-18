@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
 			MPI_COMM_WORLD
 		);
 		eat(worker_fish, global_max, i);
+		printf("global max is: %f\n", global_max);
 		find_barycentre(worker_fish, &local_numerator, &local_denominator);
 		MPI_Reduce(&local_numerator, &global_numerator, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 		MPI_Reduce(&local_denominator, &global_denominator, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -54,8 +55,7 @@ int main(int argc, char *argv[])
 		
 		if (rank == 0) 
 			final_barycentre = global_numerator / global_denominator;
-
-		printf("final barycentre is done: %f\n", final_barycentre);
+			printf("final barycentre is done: %f\n", &final_barycentre);
 	}
 
 	MPI_Gather(worker_fish, num_bytes, MPI_BYTE, all_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
