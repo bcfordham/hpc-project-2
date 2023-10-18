@@ -1,4 +1,0 @@
-make: *** No rule to make target 'parallel_tasks'.  Stop.
-slurmstepd: error: execve(): /home/nong/hpc-project/parallel_tasks results/sh files/./schooling: No such file or directory
-srun: error: nid002604: task 0: Exited with exit code 2
-srun: launch/slurm: _step_signal: Terminating StepId=4613852.0

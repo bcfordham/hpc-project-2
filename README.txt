@@ -1,36 +1,32 @@
-Repository for the High Performance Computing project
+Repository for the second High Performance Computing project
 
 Developed by: 
 Blake Fordham (22708346)
 Nicodemus Ong (22607943)
 
+
 Compilation:
 Compile with make and the rule corresponding to whichever implementation you'd 
 like to use.
-e.g. if you want to compile using the sequential implementation, 
-use 'make clean sequential', and for the parallel_for implementation 
-use 'make clean parallel_for'.
+e.g. if you want to compile using the sequential implementation, run:
+
+make clean sequential
+
+and for the parallel_for implementation run:
+
+make clean parallel_for
+
 
 Available experiments:
 sequential
 parallel_for
-parallel_for_scheduling_static
-parallel_for_scheduling_dynamic
-parallel_for_scheduling_guided
-parallel_for_scheduling_runtime
-parallel_step_swim
-parallel_tasks
-barycentre_only
-eat_only
-swim_only
-good_cache
-bad_cache
 
 
-Execute with:
-./schooling
+Execution:
+If you're just running on your local machine then run:
 
-Beware that OpenMP will try to use all available threads to execute.
+mpirun -np 4 ./schooling
+
 
 Results:
 Results of all our experiments are in the results/ directory along with the 

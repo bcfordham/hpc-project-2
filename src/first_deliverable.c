@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-#include <omp.h>
 #include <mpi.h>
 #include "fish_mpi.h"
 #include "utilities_mpi.h"
@@ -9,17 +7,23 @@
 #define NUM_PROCESSES 4
 #define NUM_STEPS 100
 
+<<<<<<< HEAD
 // NUM_FISH needs to be divisible by NUM_PROCESSES to send the correct number of 
 // fish to worker processes
+=======
+/* NUM_FISH needs to be divisible by NUM_PROCESSES to send the correct number 
+ of fish to worker processes */
+#define NUM_PROCESSES 4
+>>>>>>> origin/master
 
-// Function only executed by the master process
+// Populates the fish array and writes their data to a file
 void pre_scatter(struct fish *fish)
 {
 	FILE *fp;
 	
 	generate_fish(fish);
 
-	// Write fish data to an output file
+	// Write fish data to a file
 	fp = fopen("out1.txt", "w+");
 	fprintf(fp, "#\tx\ty\tw\tf\n");
 	for (int i = 0; i < NUM_FISH; i++)
@@ -27,11 +31,12 @@ void pre_scatter(struct fish *fish)
 		  fish[i].w, fish[i].f);
 }
 
+// Writes fish data to a file and frees the fish array
 void post_scatter(struct fish *fish)
 {
 	FILE *fp;
 
-	// Write fish data to an output file
+	// Write fish data to a file
 	fp = fopen("out2.txt", "w+");
 	fprintf(fp, "#\tx\ty\tw\tf\n");
 	for (int i = 0; i < NUM_FISH; i++)
@@ -44,18 +49,15 @@ void post_scatter(struct fish *fish)
 int main(int argc, char *argv[])
 {
 	int rank, size;
-	double start, end, time_taken;
 	struct fish *all_fish;
 	struct fish *worker_fish;
-
-	start = omp_get_wtime();
+	
+	// MPI code initialisation
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	
 	const int num_bytes = (NUM_FISH / NUM_PROCESSES) * sizeof(struct fish);
-
-	// MPI code initialisation
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank == 0) {
         all_fish = malloc(NUM_FISH * sizeof(struct fish));
@@ -91,12 +93,6 @@ int main(int argc, char *argv[])
     }
     free(worker_fish);
     MPI_Finalize();
-
-	end = omp_get_wtime();
-	time_taken = end - start;
-	
-	printf("num of fish: %d\n", NUM_FISH);
-	printf("Time taken: %.10f\n", time_taken);
 
 	return 0;
 }
