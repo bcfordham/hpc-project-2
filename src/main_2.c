@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	double global_numerator;
 	double global_denominator;
 	double final_barycentre;
-
+	MPI_Status status;
 	// MPI code initialisation
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -33,8 +33,14 @@ int main(int argc, char *argv[])
 	}
 	
     worker_fish = malloc(num_bytes);
-	
-	MPI_Scatter(all_fish, num_bytes, MPI_BYTE, worker_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
+	if (rank == 0) {
+	for (int i = 1; i < 4; i++)
+		MPI_Send(&all_fish[(NUM_FISH / NUM_PROCESSES) * i], num_bytes, MPI_BYTE, i, i, MPI_COMM_WORLD);
+	}
+	if (rank != 0) {
+		MPI_Recv(worker_fish, num_bytes, MPI_BYTE, 0, rank, MPI_COMM_WORLD, &status);
+	}
+
 	for (int i = 0; i < NUM_STEPS; i++) {
 		local_max = swim(worker_fish);
 		printf("%d is running\n", i);
@@ -55,7 +61,7 @@ int main(int argc, char *argv[])
 		if (rank == 0) 
 			final_barycentre = global_numerator / global_denominator;
 
-		printf("final barycentre is done: %f\n", final_barycentre);
+		printf("final barycentre is done: \n", final_barycentre);
 	}
 
 	MPI_Gather(worker_fish, num_bytes, MPI_BYTE, all_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
