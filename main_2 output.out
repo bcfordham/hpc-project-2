@@ -1,0 +1,12 @@
+MPICH ERROR [Rank 0] [job id 4924980.0] [Wed Oct 18 21:23:22 2023] [nid002610] - Abort(336189702) (rank 0 in comm 0): Fatal error in PMPI_Send: Invalid rank, error stack:
+PMPI_Send(163): MPI_Send(buf=0x495530, count=1600, MPI_BYTE, dest=2, tag=2, MPI_COMM_WORLD) failed
+PMPI_Send(100): Invalid rank has value 2 but must be nonnegative and less than 2
+
+aborting job:
+Fatal error in PMPI_Send: Invalid rank, error stack:
+PMPI_Send(163): MPI_Send(buf=0x495530, count=1600, MPI_BYTE, dest=2, tag=2, MPI_COMM_WORLD) failed
+PMPI_Send(100): Invalid rank has value 2 but must be nonnegative and less than 2
+srun: error: nid002610: task 0: Exited with exit code 255
+srun: launch/slurm: _step_signal: Terminating StepId=4924980.0
+srun: error: nid002611: task 1: Terminated
+srun: Force Terminated StepId=4924980.0
