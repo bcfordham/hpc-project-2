@@ -4,7 +4,7 @@
  of fish to worker processes */
 #define NUM_FISH 100
 #define NUM_STEPS 100
-#define NUM_PROCESSES 4
+#define NUM_PROCESSES 2
 
 struct fish {
 	double x;

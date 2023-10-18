@@ -1,0 +1,4 @@
+srun: error: nid002610: task 0: Segmentation fault
+srun: launch/slurm: _step_signal: Terminating StepId=4924688.0
+srun: error: nid002611: task 1: Terminated
+srun: Force Terminated StepId=4924688.0

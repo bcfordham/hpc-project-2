@@ -1,4 +1,4 @@
-#include "fish_mpi.h"  // Ensure this includes the definition of the 'struct fish'
-void parallel_eat(struct fish *fish, int local_num_fish, double max, int step);
-double parallel_swim(struct fish *fish, int local_num_fish);
-double parallel_find_barycentre(struct fish *fish, int local_num_fish);
+#include "fish.h"  // Ensure this includes the definition of the 'struct fish'
+void eat(struct fish *fish, double max, int step);
+double swim(struct fish *fish);
+double find_barycentre(struct fish *fish, double *local_numerator, double *local_denominator);

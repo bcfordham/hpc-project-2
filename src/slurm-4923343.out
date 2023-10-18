@@ -1,0 +1,5 @@
+slurmstepd: error: execve(): /home/nong/hpc-project-2/src/./schooling: No such file or directory
+srun: error: nid002606: task 0: Exited with exit code 2
+srun: launch/slurm: _step_signal: Terminating StepId=4923343.0
+srun: error: nid002607: task 1: Terminated
+srun: Force Terminated StepId=4923343.0
