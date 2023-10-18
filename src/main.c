@@ -5,7 +5,17 @@
 #include "fish.h"
 #include "utilities.h"
 
+void post_scatter(struct fish *fish)
+{
+	FILE *fp;
 
+	// Write fish data to a file
+	fp = fopen("out2.txt", "w+");
+	fprintf(fp, "#\tx\ty\tw\tf\n");
+	for (int i = 0; i < NUM_FISH; i++)
+		fprintf(fp, "%d\t%.2f\t%.2f\t%.2f\t%.2f\n", i, fish[i].x, fish[i].y, 
+		  fish[i].w, fish[i].f);
+}
 
 int main(int argc, char *argv[])
 {
@@ -51,7 +61,6 @@ int main(int argc, char *argv[])
 		find_barycentre(worker_fish, &local_numerator, &local_denominator);
 		MPI_Reduce(&local_numerator, &global_numerator, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 		MPI_Reduce(&local_denominator, &global_denominator, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-		printf("barycentre is done for %d \n", i);
 		
 		if (rank == 0) 
 			final_barycentre = global_numerator / global_denominator;
@@ -61,6 +70,7 @@ int main(int argc, char *argv[])
 	MPI_Gather(worker_fish, num_bytes, MPI_BYTE, all_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
+		post_scatter(all_fish);
         free(all_fish);
     }
 
