@@ -1,0 +1,7 @@
+Runtime: 127.03 seconds
+Config:
+Fish: 1200000
+Steps: 10000
+Processes: 4
+Threads: 1
+Using collective communication

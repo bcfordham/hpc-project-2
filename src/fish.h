@@ -2,8 +2,8 @@
 #define INITIAL_WEIGHT 45
 /* NUM_FISH needs to be divisible by NUM_PROCESSES to send the correct number 
  of fish to worker processes */
-#define NUM_FISH 100
-#define NUM_STEPS 100
+#define NUM_FISH 1200000
+#define NUM_STEPS 10000
 #define NUM_PROCESSES 4
 
 struct fish {
