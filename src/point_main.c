@@ -25,7 +25,8 @@ int main(int argc, char *argv[])
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	
 	if (size != NUM_PROCESSES) {
-		printf("NUM_PROCESSES in fish.h is %d when it should be %d\n", NUM_PROCESSES, size);
+		printf("NUM_PROCESSES in fish.h is %d when it should be %d\n", 
+			NUM_PROCESSES, size);
 		exit(EXIT_FAILURE);
 	}
 	
@@ -39,14 +40,19 @@ int main(int argc, char *argv[])
 		generate_fish(all_fish);
 	}
 	
-    worker_fish = malloc(num_bytes);
+	worker_fish = malloc(num_bytes);
+	
+	// Equivalent to scatter but implemented point_to_point
 	if (rank == 0) {
 		for (int i = 1; i < NUM_PROCESSES; i++)
 			MPI_Send(&all_fish[(NUM_FISH / NUM_PROCESSES) * i], num_bytes, 
 				MPI_BYTE, i, i, MPI_COMM_WORLD);
-	}
-	if (rank != 0)
-		MPI_Recv(worker_fish, num_bytes, MPI_BYTE, 0, rank, MPI_COMM_WORLD, &status);
+
+		for (int i = 0; i < NUM_FISH / NUM_PROCESSES; i++)
+			worker_fish[i] = all_fish[i];
+	} else
+		MPI_Recv(worker_fish, num_bytes, MPI_BYTE, 0, rank, 
+			MPI_COMM_WORLD, &status);
 
 	for (int i = 0; i < NUM_STEPS; i++) {
 		local_max = swim(worker_fish);
@@ -60,24 +66,35 @@ int main(int argc, char *argv[])
 		);
 		eat(worker_fish, global_max, i);
 		find_barycentre(worker_fish, &local_numerator, &local_denominator);
-		MPI_Reduce(&local_numerator, &global_numerator, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-		MPI_Reduce(&local_denominator, &global_denominator, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+		MPI_Reduce(&local_numerator, &global_numerator, 1, MPI_DOUBLE, 
+			 MPI_SUM, 0, MPI_COMM_WORLD);
+		MPI_Reduce(&local_denominator, &global_denominator, 1, MPI_DOUBLE, 
+			 MPI_SUM, 0, MPI_COMM_WORLD);
 		
 		if (rank == 0) 
 			final_barycentre = global_numerator / global_denominator;
 	}
 
-	MPI_Gather(worker_fish, num_bytes, MPI_BYTE, all_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
+	if (rank == 0) {
+		for (int i = 0; i < NUM_FISH / NUM_PROCESSES; i++)
+			all_fish[i] = worker_fish[i];
 
-    if (rank == 0)
-        free(all_fish);
+		for (int i = 1; i < NUM_PROCESSES; i++)
+			MPI_Recv(&all_fish[(NUM_FISH / NUM_PROCESSES) * i], num_bytes, 
+				MPI_BYTE, i, 0, MPI_COMM_WORLD, &status);
+	}
+	else
+		MPI_Send(worker_fish, num_bytes, MPI_BYTE, 0, 0, MPI_COMM_WORLD);
 
-    free(worker_fish);
+	if (rank == 0)
+		free(all_fish);
+
+	free(worker_fish);
 
 	MPI_Barrier(MPI_COMM_WORLD);
 	end = MPI_Wtime();
 
-    MPI_Finalize();
+	MPI_Finalize();
 
 	if (rank == 0)
 		printf("Runtime: %.2f seconds\n", end - start);
