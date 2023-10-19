@@ -22,6 +22,11 @@ int main(int argc, char *argv[])
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+	if (size != NUM_PROCESSES) {
+		printf("NUM_PROCESSES in fish.h is %d when it should be %d\n", NUM_PROCESSES, size);
+		exit(EXIT_FAILURE);
+	}
+
 	const int num_bytes = (NUM_FISH / NUM_PROCESSES) * sizeof(struct fish);
 
 	if (rank == 0) {
