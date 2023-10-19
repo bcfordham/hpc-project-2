@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 	int rank, size;
 	struct fish *all_fish;
 	struct fish *worker_fish;
+	double start, end;
 	double local_max;
 	double global_max;
 	double local_numerator;
@@ -18,16 +19,19 @@ int main(int argc, char *argv[])
 	double final_barycentre;
 	MPI_Status status;
 	
-	if (size != NUM_PROCESSES) {
-		printf("NUM_PROCESSES in fish.h is %d when it should be %d\n", NUM_PROCESSES, size);
-		exit(EXIT_FAILURE);
-	}
-
 	// MPI code initialisation
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	
+	if (size != NUM_PROCESSES) {
+		printf("NUM_PROCESSES in fish.h is %d when it should be %d\n", NUM_PROCESSES, size);
+		exit(EXIT_FAILURE);
+	}
+	
+	MPI_Barrier(MPI_COMM_WORLD);
+	start = MPI_Wtime();
+
 	const int num_bytes = (NUM_FISH / NUM_PROCESSES) * sizeof(struct fish);
 
 	if (rank == 0) {
@@ -70,7 +74,13 @@ int main(int argc, char *argv[])
 
     free(worker_fish);
 
+	MPI_Barrier(MPI_COMM_WORLD);
+	end = MPI_Wtime();
+
     MPI_Finalize();
+
+	if (rank == 0)
+		printf("Runtime: %.2f seconds\n", end - start);
 
 	return 0;
 }
