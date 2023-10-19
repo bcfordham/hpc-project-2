@@ -1,40 +1,29 @@
-parallel_for_mpi: main.o parallel_for_mpi.o utilities.o
-	mpicc -fopenmp -DOPENMP -g -lm -o schooling main.o parallel_for_mpi.o utilities.o
-	rm -f *.o
+mpi_omp: collective_main.o fish_actions.o utilities.o
+	mpicc -fopenmp -DOPENMP -lm -o schooling collective_main.o fish_actions.o utilities.o
 
-parallel_for_mpi_2: main_2.o parallel_for_mpi.o utilities.o
-	mpicc -fopenmp -DOPENMP -g -lm -o schooling main_2.o parallel_for_mpi.o utilities.o
-	rm -f *.o
+only_mpi: collective_main.o fish_actions.o utilities.o
+	mpicc -lm -o schooling collective_main.o fish_actions.o utilities.o
 
-sequential: main.o sequential.o utilities.o
-	gcc -fopenmp -lm -g -o schooling main.o sequential.o utilities.o
-	rm -f *.o
-
-parallel_for: main.o parallel_for.o utilities.o
-	gcc -fopenmp -lm -g -o schooling main.o parallel_for.o utilities.o
-	rm -f *.o
+point_to_point: point_main.o fish_actions.o utilities.o
+	mpicc -fopenmp -DOPENMP -lm -o schooling point_main.o fish_actions.o utilities.o
 
 first_deliverable: first_deliverable.o utilities.o
-	mpicc -lm -g -o schooling first_deliverable.o utilities.o
-	rm -f *.o
+	mpicc -lm -o schooling first_deliverable.o utilities.o
 
-main.o: src/main.c src/fish.h src/utilities.h
-	mpicc -g -c src/main.c
+collective_main.o: src/collective_main.c src/utilities.c src/fish_actions.c src/fish.h src/utilities.h
+	mpicc -c src/collective_main.c
 
-main_2.o: src/main_2.c src/fish.h src/utilities.h
-	mpicc -g -c src/main_2.c
+point_main.o: src/point_main.c src/utilities.c src/fish_actions.c src/fish.h src/utilities.h
+	mpicc -c src/point_main.c
 
-parallel_for_mpi.o: src/parallel_for_mpi.c src/fish.h
-	mpicc -fopenmp -DOPENMP -g -c src/parallel_for_mpi.c
-
-sequential.o: src/sequential.c src/fish.h
-	gcc -g -c src/sequential.c
+fish_actions.o: src/fish_actions.c src/utilities.c src/fish.h src/utilities.h
+	gcc -fopenmp -DOPENMP -c src/fish_actions.c
 
 utilities.o: src/utilities.c src/utilities.h src/fish.h
-	gcc -lm -g -c src/utilities.c
+	gcc -lm -c src/utilities.c
 
-first_deliverable.o: src/first_deliverable.c src/fish.h src/utilities.h
-	mpicc -g -c src/first_deliverable.c
+first_deliverable.o: src/first_deliverable.c src/utilities.c src/fish.h src/utilities.h
+	mpicc -c src/first_deliverable.c
 
 clean:
 	rm -f *.o
