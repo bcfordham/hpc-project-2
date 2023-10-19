@@ -72,8 +72,19 @@ int main(int argc, char *argv[])
 
     MPI_Finalize();
 
-	if (rank == 0)
+	if (rank == 0) {
 		printf("Runtime: %.2f seconds\n", end - start);
+		printf("Config:\n");
+		printf("Fish: %d\n", NUM_FISH);
+		printf("Steps: %d\n", NUM_STEPS);
+		printf("Processes: %d\n", NUM_PROCESSES);
+		#ifdef OPENMP
+		printf("Threads: %s\n", getenv("OMP_NUM_THREADS"));
+		#else
+		printf("Not using OpenMP\n");
+		#endif
+		printf("Using collective communication\n");
+	}
 
 	return 0;
 }
