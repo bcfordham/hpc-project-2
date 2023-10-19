@@ -12,8 +12,8 @@
 // Calculates the new weight for the fish
 void eat(struct fish *fish, double max, int step) {
 	#ifdef OPENMP
-		#pragma omp parallel
-		{
+	#pragma omp parallel
+	{
 	#endif
 		if (!step) {
 			#ifdef OPENMP
@@ -35,7 +35,7 @@ void eat(struct fish *fish, double max, int step) {
 			}
 		}
 	#ifdef OPENMP	
-		}
+	}
 	#endif
 }
 
@@ -47,7 +47,7 @@ double swim(struct fish *fish) {
 	double new;
 
 	#ifdef OPENMP
-		#pragma omp parallel for reduction(max:max) private(prev_x, prev_y, new)
+	#pragma omp parallel for reduction(max:max) private(prev_x, prev_y, new)
 	#endif
 	for (int i = 0; i < NUM_FISH / NUM_PROCESSES; i++) {
 		if (fish[i].w < 2 * INITIAL_WEIGHT) {
@@ -64,19 +64,20 @@ double swim(struct fish *fish) {
 }
 
 // Calculates the barycentre of the fish
-double find_barycentre(struct fish *fish, double *local_numerator, double *local_denominator) {
+void find_barycentre(struct fish *fish, double *local_numerator, double *local_denominator) {
+	double distance;
 	double numerator = 0;
 	double denominator = 0;
-	double distance ;
 
 	#ifdef OPENMP
-		#pragma omp parallel for reduction(+:numerator) reduction(+:denominator) private(distance)
+	#pragma omp parallel for reduction(+:numerator) reduction(+:denominator) private(distance)
 	#endif
-	for (int i = 0; i < NUM_FISH; i++) {
+	for (int i = 0; i < NUM_FISH / NUM_PROCESSES; i++) {
 		distance = sqrt(pow(fish[i].x, 2) + pow(fish[i].y, 2));
-		*local_numerator +=  distance * fish[i].w;
-		*local_denominator += distance;
+		numerator +=  distance * fish[i].w;
+		denominator += distance;
 	}
 
-	return 0;
+	*local_numerator = numerator;
+	*local_denominator = denominator;
 }

@@ -4,7 +4,7 @@
  of fish to worker processes */
 #define NUM_FISH 100
 #define NUM_STEPS 100
-#define NUM_PROCESSES 2
+#define NUM_PROCESSES 4
 
 struct fish {
 	double x;
@@ -15,4 +15,4 @@ struct fish {
 
 void eat(struct fish *fish, double max, int step);
 double swim(struct fish *fish);
-double find_barycentre(struct fish *fish, double *numerator, double *denominator);
+void find_barycentre(struct fish *fish, double *numerator, double *denominator);
