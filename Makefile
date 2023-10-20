@@ -17,7 +17,7 @@ collective_main_no_omp.o: src/collective_main.c src/utilities.c src/fish_actions
 	mpicc -c -o collective_main_no_omp.o src/collective_main.c
 
 point_main.o: src/point_main.c src/utilities.c src/fish_actions.c src/fish.h src/utilities.h
-	mpicc -c src/point_main.c
+	mpicc -DOPENMP -c src/point_main.c
 
 fish_actions.o: src/fish_actions.c src/utilities.c src/fish.h src/utilities.h
 	gcc -fopenmp -DOPENMP -c src/fish_actions.c
