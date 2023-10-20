@@ -56,9 +56,6 @@ int main(int argc, char *argv[])
     worker_fish = malloc(num_bytes);
 	
 	MPI_Scatter(all_fish, num_bytes, MPI_BYTE, worker_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
-	for (int i = 0; i < 10; i++) {
-		printf("%f\n",worker_fish[i].x);
-	}
 	MPI_Gather(worker_fish, num_bytes, MPI_BYTE, all_fish, num_bytes, MPI_BYTE, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {

@@ -18,6 +18,7 @@ make only_mpi
 
 
 Available experiments:
+first_deliverable
 mpi_omp
 only_mpi
 point_to_point
