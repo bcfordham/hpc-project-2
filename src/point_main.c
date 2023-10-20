@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 	double global_denominator;
 	double final_barycentre;
 	MPI_Status status;
+	double reduce_array[NUM_PROCESSES];
 	
 	// MPI code initialisation
 	MPI_Init(&argc, &argv);
@@ -56,20 +57,54 @@ int main(int argc, char *argv[])
 
 	for (int i = 0; i < NUM_STEPS; i++) {
 		local_max = swim(worker_fish);
-		MPI_Allreduce(
-			&local_max,
-			&global_max,
-			1,
-			MPI_DOUBLE,
-			MPI_MAX,
-			MPI_COMM_WORLD
-		);
+		
+		// Equivalent to Allreduce but point-to-point
+		if (rank != 0) {
+			MPI_Send(&local_max, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+			MPI_Recv(&global_max, 1, MPI_DOUBLE, 0, rank, MPI_COMM_WORLD, &status);
+		}
+		else {
+			reduce_array[0] = local_max;
+			for (int i = 1; i < NUM_PROCESSES; i++)
+				MPI_Recv(&reduce_array[i], 1, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, &status);
+
+			global_max = 0;
+			for (int i = 0; i < NUM_PROCESSES; i++) {
+				if (reduce_array[i] > global_max)
+					global_max = reduce_array[i];
+			}
+			for (int i = 1; i < NUM_PROCESSES; i++)
+				MPI_Send(&global_max, 1, MPI_DOUBLE, i, i, MPI_COMM_WORLD);
+		}
+
 		eat(worker_fish, global_max, i);
 		find_barycentre(worker_fish, &local_numerator, &local_denominator);
-		MPI_Reduce(&local_numerator, &global_numerator, 1, MPI_DOUBLE, 
-			 MPI_SUM, 0, MPI_COMM_WORLD);
-		MPI_Reduce(&local_denominator, &global_denominator, 1, MPI_DOUBLE, 
-			 MPI_SUM, 0, MPI_COMM_WORLD);
+
+		// Equivalent to Reduce but point-to-point
+		if (rank != 0)
+			MPI_Send(&local_numerator, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+		else {
+			reduce_array[0] = local_max;
+			for (int i = 1; i < NUM_PROCESSES; i++)
+				MPI_Recv(&reduce_array[i], 1, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, &status);
+
+			global_numerator = 0;
+			for (int i = 0; i < NUM_PROCESSES; i++)
+				global_numerator += reduce_array[i];
+		}
+
+		// Equivalent to Reduce but point-to-point
+		if (rank != 0)
+			MPI_Send(&local_denominator, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+		else {
+			reduce_array[0] = local_max;
+			for (int i = 1; i < NUM_PROCESSES; i++)
+				MPI_Recv(&reduce_array[i], 1, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, &status);
+
+			global_denominator = 0;
+			for (int i = 0; i < NUM_PROCESSES; i++)
+				global_denominator += reduce_array[i];
+		}
 		
 		if (rank == 0) 
 			final_barycentre = global_numerator / global_denominator;
