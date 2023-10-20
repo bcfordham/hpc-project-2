@@ -1,0 +1,7 @@
+Runtime: 172.31 seconds
+Config:
+Fish: 1200000
+Steps: 10000
+Processes: 3
+Threads: 16
+Using point-to-point communication
